@@ -6,6 +6,7 @@ import { Card } from '@/components/card';
 import { MacroSummary } from '@/components/macro-summary';
 import { MealSection } from '@/components/meal-section';
 import { Screen } from '@/components/screen';
+import { StepsCard } from '@/components/steps-card';
 import { ThemedText } from '@/components/themed-text';
 import { WaterCard } from '@/components/water-card';
 import { Spacing } from '@/constants/theme';
@@ -89,6 +90,8 @@ export default function TodayScreen() {
       </Card>
 
       <WaterCard day={today} />
+
+      <StepsCard day={today} />
     </Screen>
   );
 }
