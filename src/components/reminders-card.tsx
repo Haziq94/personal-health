@@ -16,7 +16,11 @@ import {
   type ReminderSettings,
 } from '@/domain/reminders';
 import { useTheme } from '@/hooks/use-theme';
-import { requestPermission, syncReminders } from '@/notifications/schedule';
+import {
+  remindersAvailability,
+  requestPermission,
+  syncReminders,
+} from '@/notifications/schedule';
 
 const STEP_MINUTES = 15;
 
@@ -36,6 +40,7 @@ export function RemindersCard() {
 
   const [settings, setSettings] = useState<ReminderSettings | null>(null);
   const [denied, setDenied] = useState(false);
+  const unavailable = remindersAvailability() !== 'available';
 
   useEffect(() => {
     if (!settings && !stored.loading) setSettings(normalizeReminders(stored.data));
@@ -58,8 +63,8 @@ export function RemindersCard() {
 
     if (wants) {
       const outcome = await requestPermission();
-      if (outcome === 'denied') {
-        setDenied(true);
+      if (outcome === 'denied' || outcome === 'unavailable') {
+        setDenied(outcome === 'denied');
         await mutate((db) =>
           settingsRepo.setSetting(db, settingsRepo.SETTING_KEYS.reminders, next),
         );
@@ -134,7 +139,12 @@ export function RemindersCard() {
         />
       </View>
 
-      {denied ? (
+      {unavailable ? (
+        <ThemedText type="small" themeColor="textSecondary">
+          Reminders need a development build — Expo Go cannot deliver them. Your choices
+          here are saved and will start working once you build the app.
+        </ThemedText>
+      ) : denied ? (
         <ThemedText type="small" themeColor="danger">
           Notifications are turned off for this app. The settings are saved, but nothing
           will be delivered until you allow notifications in your device settings.
