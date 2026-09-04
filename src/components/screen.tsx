@@ -5,7 +5,8 @@ import { MaxContentWidth, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 type ScreenProps = {
-  children: ReactNode;
+  /** Optional: a screen may render empty while its data loads. */
+  children?: ReactNode;
   /** Set false for screens that manage their own scrolling (e.g. long lists). */
   scroll?: boolean;
 };

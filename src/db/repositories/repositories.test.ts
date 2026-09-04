@@ -192,6 +192,16 @@ describe('food entries', () => {
     expect(logged.perServing.kcal).toBe(200);
   });
 
+  it('fetches a single entry by id', async () => {
+    const entry = await log({ servings: 1.5 });
+
+    expect(await foodEntries.getEntry(db, entry.id)).toEqual(entry);
+  });
+
+  it('returns null for an entry that does not exist', async () => {
+    expect(await foodEntries.getEntry(db, 'gone')).toBeNull();
+  });
+
   it('updates and deletes entries', async () => {
     const entry = await log();
 

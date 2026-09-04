@@ -78,6 +78,14 @@ export async function insertEntry(
   return entry;
 }
 
+export async function getEntry(db: SqlDriver, id: string): Promise<FoodEntry | null> {
+  const row = await db.getFirstAsync<FoodEntryRow>(
+    'SELECT * FROM food_entries WHERE id = ?',
+    [id],
+  );
+  return row ? toEntry(row) : null;
+}
+
 export async function updateEntry(db: SqlDriver, entry: FoodEntry): Promise<void> {
   await db.runAsync(
     `UPDATE food_entries SET

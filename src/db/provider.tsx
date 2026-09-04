@@ -1,5 +1,13 @@
 import * as SplashScreen from 'expo-splash-screen';
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
@@ -8,7 +16,17 @@ import type { SqlDriver } from '@/db/driver';
 import { openDatabase } from '@/db/open';
 import { useTheme } from '@/hooks/use-theme';
 
-const DatabaseContext = createContext<SqlDriver | null>(null);
+interface DatabaseContextValue {
+  db: SqlDriver;
+  /**
+   * Bumped after every write. Queries depend on it, so a log entered in the
+   * modal refreshes the Today screen behind it without any explicit plumbing.
+   */
+  version: number;
+  invalidate: () => void;
+}
+
+const DatabaseContext = createContext<DatabaseContextValue | null>(null);
 
 /**
  * Opens the database and holds the splash screen until migrations finish.
@@ -19,6 +37,7 @@ const DatabaseContext = createContext<SqlDriver | null>(null);
 export function DatabaseProvider({ children }: { children: ReactNode }) {
   const [db, setDb] = useState<SqlDriver | null>(null);
   const [error, setError] = useState<Error | null>(null);
+  const [version, setVersion] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -44,10 +63,17 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
     if (db || error) void SplashScreen.hideAsync();
   }, [db, error]);
 
-  if (error) return <DatabaseError error={error} />;
-  if (!db) return null;
+  const invalidate = useCallback(() => setVersion((n) => n + 1), []);
 
-  return <DatabaseContext.Provider value={db}>{children}</DatabaseContext.Provider>;
+  const value = useMemo<DatabaseContextValue | null>(
+    () => (db ? { db, version, invalidate } : null),
+    [db, version, invalidate],
+  );
+
+  if (error) return <DatabaseError error={error} />;
+  if (!value) return null;
+
+  return <DatabaseContext.Provider value={value}>{children}</DatabaseContext.Provider>;
 }
 
 function DatabaseError({ error }: { error: Error }) {
@@ -67,12 +93,22 @@ function DatabaseError({ error }: { error: Error }) {
   );
 }
 
-export function useDatabase(): SqlDriver {
-  const db = useContext(DatabaseContext);
-  if (!db) {
-    throw new Error('useDatabase must be used inside a DatabaseProvider');
+function useDatabaseContext(): DatabaseContextValue {
+  const value = useContext(DatabaseContext);
+  if (!value) {
+    throw new Error('Database hooks must be used inside a DatabaseProvider');
   }
-  return db;
+  return value;
+}
+
+export function useDatabase(): SqlDriver {
+  return useDatabaseContext().db;
+}
+
+/** Current data version, and the callback that bumps it after a write. */
+export function useDataVersion(): { version: number; invalidate: () => void } {
+  const { version, invalidate } = useDatabaseContext();
+  return { version, invalidate };
 }
 
 const styles = StyleSheet.create({

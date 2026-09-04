@@ -23,6 +23,10 @@ export default function RootLayout() {
                 name="food/add"
                 options={{ presentation: 'modal', title: 'Add food' }}
               />
+              <Stack.Screen
+                name="food/edit/[id]"
+                options={{ presentation: 'modal', title: 'Edit entry' }}
+              />
             </Stack>
           </DatabaseProvider>
         </ThemeProvider>
