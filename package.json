@@ -36,7 +36,7 @@
     "vitest": "^5.0.0"
   },
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --port 8082",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
