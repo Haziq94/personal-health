@@ -12,6 +12,7 @@ import { Spacing } from '@/constants/theme';
 import { useDbMutation, useDbQuery } from '@/db/query';
 import * as foodEntriesRepo from '@/db/repositories/food-entries';
 import * as foodsRepo from '@/db/repositories/foods';
+import * as goalsRepo from '@/db/repositories/goals';
 import { MS_PER_DAY } from '@/domain/dates';
 import { formatDay } from '@/domain/format';
 import { defaultMealFor } from '@/domain/meals';
@@ -28,6 +29,7 @@ export default function TodayScreen() {
     (db) => foodsRepo.listMostLogged(db, { since: today - 30 * MS_PER_DAY, limit: 8 }),
     [],
   );
+  const goal = useDbQuery((db) => goalsRepo.goalAt(db, today), []);
   const mutate = useDbMutation();
 
   const byMeal = useMemo(() => groupByMeal(entries.data ?? []), [entries.data]);
@@ -65,7 +67,7 @@ export default function TodayScreen() {
       </View>
 
       <Card title="Calories">
-        <MacroSummary total={total} />
+        <MacroSummary total={total} target={goal.data?.daily ?? null} />
       </Card>
 
       {quickAdd.data?.length ? (
