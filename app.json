@@ -8,13 +8,7 @@
     "scheme": "personalhealth",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon",
-      "infoPlist": {
-        "NSHealthShareUsageDescription": "Personal Health reads your step count so it can show it alongside what you eat. Nothing is uploaded anywhere."
-      },
-      "entitlements": {
-        "com.apple.developer.healthkit": true
-      }
+      "icon": "./assets/expo.icon"
     },
     "android": {
       "adaptiveIcon": {
@@ -44,12 +38,14 @@
       ],
       "expo-sqlite",
       "expo-sharing",
-      "react-native-health-connect",
-      "@kingstinct/react-native-healthkit"
+      "react-native-health-connect"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "platforms": [
+      "android"
+    ]
   }
 }
