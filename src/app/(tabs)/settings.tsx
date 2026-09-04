@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Card } from '@/components/card';
+import { DataCard } from '@/components/data-card';
 import { Button, NumberField, Segmented } from '@/components/form';
-import { Placeholder } from '@/components/placeholder';
 import { RemindersCard } from '@/components/reminders-card';
 import { Screen } from '@/components/screen';
 import { ThemedText } from '@/components/themed-text';
@@ -63,12 +63,7 @@ export default function SettingsScreen() {
 
       <RemindersCard />
 
-      <Card title="Your data">
-        <Placeholder phase="Phase 6">
-          Export and import everything as JSON or CSV. Until this ships, the only copy of
-          your data lives on this device.
-        </Placeholder>
-      </Card>
+      <DataCard />
     </Screen>
   );
 }
