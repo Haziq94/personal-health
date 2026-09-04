@@ -5,9 +5,9 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Card } from '@/components/card';
 import { MacroSummary } from '@/components/macro-summary';
 import { MealSection } from '@/components/meal-section';
-import { Placeholder } from '@/components/placeholder';
 import { Screen } from '@/components/screen';
 import { ThemedText } from '@/components/themed-text';
+import { WaterCard } from '@/components/water-card';
 import { Spacing } from '@/constants/theme';
 import { useDbMutation, useDbQuery } from '@/db/query';
 import * as foodEntriesRepo from '@/db/repositories/food-entries';
@@ -88,9 +88,7 @@ export default function TodayScreen() {
         ))}
       </Card>
 
-      <Card title="Water">
-        <Placeholder phase="Phase 5">Quick-add buttons and a daily tally.</Placeholder>
-      </Card>
+      <WaterCard day={today} />
     </Screen>
   );
 }

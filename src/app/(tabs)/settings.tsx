@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { Card } from '@/components/card';
 import { Button, NumberField, Segmented } from '@/components/form';
 import { Placeholder } from '@/components/placeholder';
+import { RemindersCard } from '@/components/reminders-card';
 import { Screen } from '@/components/screen';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
@@ -60,11 +61,7 @@ export default function SettingsScreen() {
       <ProfileAndGoal />
       <UnitsCard />
 
-      <Card title="Reminders">
-        <Placeholder phase="Phase 5">
-          Meal reminders and a weekly weigh-in notification.
-        </Placeholder>
-      </Card>
+      <RemindersCard />
 
       <Card title="Your data">
         <Placeholder phase="Phase 6">

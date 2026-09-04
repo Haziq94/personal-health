@@ -5,9 +5,11 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { DatabaseProvider } from '@/db/provider';
+import { configureForegroundBehavior } from '@/notifications/schedule';
 
 // DatabaseProvider hides this again once migrations have run.
 SplashScreen.preventAutoHideAsync();
+configureForegroundBehavior();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
